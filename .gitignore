@@ -1,0 +1,46 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Next.js
+.next/
+out/
+
+# NestJS / Node build output
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Prisma
+prisma/*.db
+
+# Editors
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Testing / coverage
+coverage/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Vercel
+.vercel
