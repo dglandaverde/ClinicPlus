@@ -24,21 +24,24 @@ export default function PanelPage() {
   useEffect(() => {
     if (!isReady || hasCheckedAuth.current) return;
     hasCheckedAuth.current = true;
+
     if (!user) {
       router.replace("/login");
+    } else if (user.role === "doctor") {
+      router.replace("/medico");
     }
   }, [isReady, user, router]);
 
   useEffect(() => {
-    if (user) {
+    if (user?.role === "patient") {
       // localStorage is only readable on the client, so the appointment is
       // hydrated after mount to keep the first render matching the server.
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setAppointment(getAppointment(user.email));
+      setAppointment(getAppointment(user.registrationNumber));
     }
   }, [user]);
 
-  if (!isReady || !user) {
+  if (!isReady || !user || user.role !== "patient") {
     return (
       <div className="flex min-h-svh flex-col">
         <SiteHeader variant="app" />

@@ -73,10 +73,10 @@ export function SiteHeader({ variant = "marketing" }: SiteHeaderProps) {
           {isReady && user ? (
             <>
               <Link
-                href="/panel"
+                href={user.role === "doctor" ? "/medico" : "/panel"}
                 className={cn(buttonVariants({ variant: "ghost" }))}
               >
-                Mi panel
+                {user.role === "doctor" ? "Panel médico" : "Mi panel"}
               </Link>
               <Button variant="outline" onClick={handleLogout}>
                 Cerrar sesión
@@ -132,11 +132,11 @@ export function SiteHeader({ variant = "marketing" }: SiteHeaderProps) {
               {isReady && user ? (
                 <>
                   <Link
-                    href="/panel"
+                    href={user.role === "doctor" ? "/medico" : "/panel"}
                     onClick={() => setOpen(false)}
                     className={cn(buttonVariants({ variant: "outline" }))}
                   >
-                    Mi panel
+                    {user.role === "doctor" ? "Panel médico" : "Mi panel"}
                   </Link>
                   <Button variant="ghost" onClick={handleLogout}>
                     Cerrar sesión
