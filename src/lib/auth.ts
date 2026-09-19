@@ -1,9 +1,8 @@
 // Placeholder session store backed by localStorage until the NestJS auth
 // API exists. Swap these three functions for real API/cookie calls then.
-export interface AuthUser {
-  name: string;
-  email: string;
-}
+export type AuthUser =
+  | { role: "patient"; name: string; registrationNumber: string }
+  | { role: "doctor"; name: string; email: string };
 
 const SESSION_KEY = "clinicplus.session";
 

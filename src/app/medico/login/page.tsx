@@ -3,42 +3,36 @@
 import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { CalendarHeart } from "lucide-react";
+import { Stethoscope } from "lucide-react";
 
 import { useAuth } from "@/components/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { findPatientByCredentials } from "@/lib/patients";
 
-export default function LoginPage() {
+export default function MedicoLoginPage() {
   const router = useRouter();
   const { user, isReady, login } = useAuth();
-  const [registrationNumber, setRegistrationNumber] = useState("");
-  const [dui, setDui] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isReady && user?.role === "patient") {
-      router.replace("/panel");
+    if (isReady && user?.role === "doctor") {
+      router.replace("/medico");
     }
   }, [isReady, user, router]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const patient = findPatientByCredentials(registrationNumber, dui);
-    if (!patient) {
-      setError("Número de registro o DUI incorrectos.");
+    if (!name.trim() || !email.trim()) {
+      setError("Completa tu nombre y correo electrónico.");
       return;
     }
 
-    login({
-      role: "patient",
-      name: patient.name,
-      registrationNumber: patient.registrationNumber,
-    });
-    router.push("/panel");
+    login({ role: "doctor", name: name.trim(), email: email.trim().toLowerCase() });
+    router.push("/medico");
   }
 
   return (
@@ -46,7 +40,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-8 shadow-sm">
         <Link href="/" className="mb-6 flex items-center justify-center gap-2">
           <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <CalendarHeart className="size-4.5" />
+            <Stethoscope className="size-4.5" />
           </span>
           <span className="text-lg font-semibold tracking-tight">
             ClinicPlus
@@ -54,32 +48,33 @@ export default function LoginPage() {
         </Link>
 
         <h1 className="text-center text-xl font-semibold tracking-tight">
-          Inicia sesión como paciente
+          Acceso para personal médico
         </h1>
         <p className="mt-1 text-center text-sm text-muted-foreground">
-          Consulta y agenda tus citas médicas.
+          Gestiona la agenda y las citas de tus pacientes.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="registrationNumber">Número de registro</Label>
+            <Label htmlFor="name">Nombre completo</Label>
             <Input
-              id="registrationNumber"
-              placeholder="Ej. PAC-0001"
-              value={registrationNumber}
-              onChange={(event) => setRegistrationNumber(event.target.value)}
+              id="name"
+              autoComplete="name"
+              placeholder="Ej. Dra. Laura Gómez"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="dui">DUI</Label>
+            <Label htmlFor="email">Correo electrónico</Label>
             <Input
-              id="dui"
-              type="password"
-              autoComplete="current-password"
-              placeholder="00000000-0"
-              value={dui}
-              onChange={(event) => setDui(event.target.value)}
+              id="email"
+              type="email"
+              autoComplete="email"
+              placeholder="doctor@clinicplus.app"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
             />
           </div>
 
@@ -90,14 +85,9 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        <p className="mt-6 rounded-lg bg-muted px-3 py-2 text-center text-xs text-muted-foreground">
-          Datos de prueba: <span className="font-medium">PAC-0001</span> /{" "}
-          <span className="font-medium">04567890-1</span>
-        </p>
-
-        <p className="mt-4 text-center text-sm text-muted-foreground">
-          ¿Eres personal médico?{" "}
-          <Link href="/medico/login" className="font-medium text-primary hover:underline">
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          ¿Eres paciente?{" "}
+          <Link href="/login" className="font-medium text-primary hover:underline">
             Inicia sesión aquí
           </Link>
         </p>
